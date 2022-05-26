@@ -1,0 +1,16 @@
+server_uri: bolt://localhost:7687
+admin_user: neo4j
+admin_pass: cuneyt123
+mod: async
+thread_count: 2
+
+files:
+  - url: /home/cnytync/Dev/dbpedia/sameAs_lang=en.ttl.bz2
+    compression: bz2
+    type: ttl
+    chunk_size: 10000
+    skip_records: 9100
+    cql: |
+      WITH $dict.rows AS rows UNWIND rows as row
+        CREATE(e:Entity {wikidata_id: replace(row.object,"http://www.wikidata.org/entity/",""), dbpedia_uri: row.subject, entity_type: 'semantic_web', cr_date: datetime()})
+

@@ -1,0 +1,23 @@
+server_uri: bolt://localhost:7687
+admin_user: neo4j
+admin_pass: cuneyt123
+
+files:
+  - url: /home/cnytync/Dev/dbpedia/sameAs_lang=en.ttl.bz2
+    compression: bz2
+    type: ttl
+    chunk_size: 100
+    mod: async
+    thread_count: 2
+    skip_records: 9100
+    cql: |
+      WITH $dict.rows AS rows UNWIND rows as row
+       MATCH(e:Entity) where e.dbpedia_uri = row.subject
+       SET e.cr_date = datetime()
+       WITH row, e
+         MERGE(object:Property {value:row.object, type: "string"})
+         WITH row,e,object
+         CALL apoc.merge.relationship(e, row.predicate, {source:"dbpedia", type:"uri"},{cr_date:datetime()},object,{cr_date:datetime()}) YIELD rel
+         RETURN null
+
+
