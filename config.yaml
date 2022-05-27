@@ -2,12 +2,12 @@ server_uri: bolt://localhost:7687
 admin_user: neo4j
 admin_pass: cuneyt123
 
-mod: sync
-thread_count: 8
+mod: async
+thread_count: 256
 
 files:
   - url: /home/cnytync/Dev/dbpedia/categories_lang=en_articles.ttl.bz2
-    compression: zip
+    compression: bz2
     type: ttl
     chunk_size: 100
     cql: |
