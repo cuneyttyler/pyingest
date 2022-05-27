@@ -13,7 +13,6 @@ files:
     cql: |
       WITH $dict.rows AS rows UNWIND rows as row
         WITH row WHERE  row.object CONTAINS "wikidata"
-        MERGE(e:Entity {wikidataId: replace(row.object,"http://www.wikidata.org/entity/","")})
-        SET e.dbpedia_uri = row.subject, e.entity_type = "semantic_web", e.cr_date = datetime()
+          CREATE(e:Entity {wikidata_id: replace(row.object,"http://www.wikidata.org/entity/",""), dbpedia_uri: row.subject, entity_type: 'semantic_web', cr_date: datetime()})
 
 

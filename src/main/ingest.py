@@ -329,9 +329,8 @@ class LocalServer(object):
                     for s in subjects:
                         sameas_wikidata = [r for r in rows if 'http://www.wikidata.org/entity/' in r['object'] and r['subject'] == s]
 
-                        if len(sameas_wikidata) == 1:
+                        if len(sameas_wikidata) > 1:
                             rows_to_process.append({'subject': s, 'predicate': sameas_wikidata[0]['predicate'], 'object': sameas_wikidata[0]['object']})
-
 
                     rec_num = rec_num + len(rows)
                     chunk_num = chunk_num + 1
