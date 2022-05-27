@@ -19,8 +19,12 @@ class TTLParser():
             cols2 = self.split_and_keep(r'@[a-z]{2} \.|@[a-z]{2} ;', cols[2])
             cols[2] = cols2[0]
             if len(cols2) > 1:
-                cols3 = re.split(r'@[a-z]{2} ', cols2[1])
+                cols3 = re.split(r'@[a-z]{2}', cols2[1])
                 cols.append(cols3[1])
+
+            if cols[2][0] != '"':
+                cols.append(cols[2][-1])
+                cols[2] = cols[2][:-2]
 
             row = {}
             if new_rec:

@@ -65,7 +65,7 @@ logging.basicConfig(
     format='%(asctime)s:%(levelname)s:%(message)s',
     handlers=[
         logging.FileHandler("logfile.log"),
-        logging.StreamHandler(sys.stdout)
+        # logging.StreamHandler(sys.stdout)
     ]
 )
 
@@ -331,7 +331,7 @@ class LocalServer(object):
                                                'rows_dict': rows_dict})
 
                         if session_index == config['thread_count'] - 1:
-                            # asyncio.run(self.run_asyncio(process_params))
+                            asyncio.run(self.run_asyncio(process_params))
 
                             process_params = []
 
