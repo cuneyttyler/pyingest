@@ -1,24 +1,25 @@
-server_uri: bolt://localhost:7687
+server_uri: neo4j://localhost:7687
 admin_user: neo4j
 admin_pass: cuneyt123
 
-mod: sync
-thread_count: 8
+mod: async
+thread_count: 256
 pre_ingest:
   - MERGE(property:MetaProperty {uri:'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property', name:'property'})
 
 files:
-  files:
-    - url: /home/cuneyttyler/knowledgebase/dbpedia/virtuoso-sparql-endpoint-quickstart/data/infobox-property-definitions_lang=en_2AE2.ttl
-      type: ttl
-      compression: none
-      chunk_size: 100
-      skip_chunks: 0
-      cql: |
-        WITH $dict.rows AS rows UNWIND rows as row
-           MATCH(property:MetaProperty) where property.name = 'property'
-           WITH row, property, row.predicate as predicate where predicate = 'http://www.w3.org/2000/01/rdf-schema#label'
-           CREATE(metaProperty:MetaProperty {uri: row.subject, name: row.object, source: 'dbpedia'})
-           WITH *
-           CALL apoc.create.relationship(property, 'PROPERTY_META_PROPERTY' ,{uri:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'},metaProperty) YIELD rel
-           RETURN null
+  - url: /home/cuneyttyler/knowledgebase/dbpedia/infobox-property-definitions_lang=en.ttl.bz2
+    type: ttl
+    compression: bz2
+    chunk_size: 100
+    skip_chunks: 0
+    cql: |
+      WITH $dict.rows AS rows UNWIND rows as row
+        MATCH(property:MetaProperty) where property.name = 'property'
+        WITH row, property, row.predicate as predicate where predicate = 'http://www.w3.org/2000/01/rdf-schema#label'
+        CREATE(metaProperty:MetaProperty {uri: row.subject, name: row.object, source: 'dbpedia'})
+        WITH *
+        CALL apoc.create.relationship(property, 'TO_META_PROPERTY' ,{uri:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'},metaProperty) YIELD rel
+        RETURN null
+
+
