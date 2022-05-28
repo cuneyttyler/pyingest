@@ -29,10 +29,11 @@ files:
                                    claim.mainsnak.datavalue.type IS NOT NULL AND claim.mainsnak.datavalue.type="quantity","CREATE(object:Property {wikidata_id: key, datatype: claim.mainsnak.datatype, amount: claim.mainsnak.datavalue.value.amount, upperBound: claim.mainsnak.datavalue.value.upperBound, lowerBound: claim.mainsnak.datavalue.value.lowerBound, unit: claim.mainsnak.datavalue.value.unit, type: claim.mainsnak.datavalue.type,rank: claim.mainsnak.rank}) RETURN object",
                                    claim.mainsnak.datavalue.type IS NOT NULL AND claim.mainsnak.datavalue.type="time","CREATE(object:Property {wikidata_id: key, datatype: claim.mainsnak.datatype, time: claim.mainsnak.datavalue.value.time, timezone: claim.mainsnak.datavalue.value.timezone, before: claim.mainsnak.datavalue.value.before, after: claim.mainsnak.datavalue.value.after, precision: claim.mainsnak.datavalue.value.precision, calendarmodel: claim.mainsnak.datavalue.value.calendarmodel, type: claim.mainsnak.datavalue.type,rank: claim.mainsnak.rank}) RETURN object"],"RETURN null",{claim:claim,subject:subject,key:key}) YIELD value as object
                     
-                    CREATE (object.object)-[property_meta_property]->(mp)
                     
-                    WITH subject, key, object WHERE object.object IS NOT NULL
-                        CALL apoc.create.relationship(subject, "https://www.wikidata.org/wiki/Property:" + key, {source:"wikidata", type:"literal"}, object.object) YIELD rel
+                    
+                    WITH subject, key, object.object as object WHERE object IS NOT NULL
+                        CREATE (object)-[:property_meta_property]->(mp)
+                        WITH * CALL apoc.create.relationship(subject, "https://www.wikidata.org/wiki/Property:" + key, {source:"wikidata", type:"literal"}, object) YIELD rel
                         RETURN null
                     ', {claim:claim,subject:subject,key:key}) YIELD value
             RETURN null
