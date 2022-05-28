@@ -20,5 +20,5 @@ files:
            WITH row, property, row.predicate as predicate where predicate = 'http://www.w3.org/2000/01/rdf-schema#label'
            CREATE(metaProperty:MetaProperty {uri: row.subject, name: row.object, source: 'dbpedia'})
            WITH *
-           CALL apoc.create.relationship(metaProperty, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',{},property) YIELD rel
+           CALL apoc.create.relationship(property, 'PROPERTY_META_PROPERTY' ,{uri:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'},metaProperty) YIELD rel
            RETURN null
