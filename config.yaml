@@ -17,18 +17,20 @@ files:
            WITH *, 'number' as numberStr, 'time' as timeStr, 'string' as stringStr
               CALL apoc.do.when(row.object CONTAINS 'http://dbpedia.org',
                   'MATCH(object:Entity) where object.dbpedia_uri = row.object
-                   WITH * CALL apoc.create.relationship(subject,row.predicate,{source: "dbpedia", type: "uri"}, object) YIELD rel RETURN null',
+                   WITH * CALL apoc.create.relationship(subject,"TO_ENTITY",{uri: row.predicate, source: "dbpedia", type: "uri"}, object) YIELD rel RETURN null',
                    'MATCH(mp:MetaProperty) where mp.uri = row.predicate
                     WITH * CALL apoc.do.case([
                          row.type is not null and row.type = "http://www.w3.org/2001/XMLSchema#integer",
                         "CREATE(object:Property {value: row.object, datatype: numberStr})
-                         CREATE (object)-[:property_meta_property]->(mp) RETURN object",
+                         CREATE (object)-[:PROPERTY_META_PROPERTY]->(mp) RETURN object",
                          row.type is not null and row.type = "http://www.w3.org/2001/XMLSchema#date",
                          "CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
-                         CREATE (object)-[:property_meta_property]->(mp) RETURN object"],
+                         CREATE (object)-[:PROPERTY_META_PROPERTY]->(mp) RETURN object",
+                         row.predicate = "http://xmlns.com/foaf/0.1/depiction",
+                         "SET subject.image = row.object"],
                          "CREATE(object:Property {value: row.object, type: stringStr, datatype: stringStr})
-                         CREATE (object)-[:property_meta_property]->(mp) RETURN object",
+                         CREATE (object)-[:PROPERTY_META_PROPERTY]->(mp) RETURN object",
                          {row:row, mp: mp, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr}) YIELD value as object
 
-                    WITH * CALL apoc.create.relationship(subject,row.predicate,{source: "dbpedia", type: "literal"}, object.object) YIELD rel RETURN null',
+                    WITH * CALL apoc.create.relationship(subject,"TO_PROPERTY",{uri: row.predicate, source: "dbpedia", type: "literal"}, object.object) YIELD rel RETURN null',
                     {row: row, subject: subject, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr}) YIELD value RETURN null
