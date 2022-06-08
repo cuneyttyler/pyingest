@@ -110,6 +110,7 @@ class TTLParser():
 
     def read_prefixes(self,file):
         prefixes = []
+
         self.line = file.readline()
         while len(self.line) != 0:
             if self.line == '\n':
@@ -122,7 +123,6 @@ class TTLParser():
                 break
 
             prefixes.append(prefix)
-
             self.line = file.readline()
 
         return prefixes
@@ -162,3 +162,4 @@ class TTLParser():
 
 
         return str
+

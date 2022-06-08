@@ -389,7 +389,7 @@ class LocalServer(object):
                 else:
                     print('Exception occured (Session : %d)' % (session_index))
                     stderr_logger.exception(e)
-                i += 1
+                    i += 1
 
     async def run_cql(self, session_index, cql, dict):
         print('Running session %d' % session_index)
