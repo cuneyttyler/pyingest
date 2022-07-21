@@ -5,7 +5,7 @@ class TTLParser():
         pass
 
     def split_and_keep(self,seperator, s, maxsplit=0):
-        TEMP_PLACEHOLDER = ';"_;"_'
+        TEMP_PLACEHOLDER = ';_;_'
         return re.split(TEMP_PLACEHOLDER, re.sub(seperator, lambda match: TEMP_PLACEHOLDER + match.group() , s),maxsplit=maxsplit)
 
     def parse_ttl_line(self, line, new_rec, prev_subject,prefixes):
@@ -13,12 +13,13 @@ class TTLParser():
             return None
 
         try:
-            cols = self.split_and_keep(r' (".*"|<http|<ftp)',line.strip(),maxsplit=2)
+            cols = self.split_and_keep(r' (".*"|\.|<http|<ftp)',line.strip(),maxsplit=3)
             cols = [col.strip() for col in cols]
 
             if cols[2][0] == '<':
-                cols.append(cols[2][-1])
-                cols[2] = cols[2][1:-3]
+                # cols.append(cols[2][-1])
+                # cols[2] = cols[2][1:-1]
+                pass
             elif cols[2][0] == '"':
                 index = [s.start() for s in re.finditer('"', cols[2])][1]
                 if '^^' in cols[2][index+1:]:
@@ -156,10 +157,12 @@ class TTLParser():
         str = str[1:] if str[0] == '<' else str
         str = str[:-1] if str[len(str) - 1] == '>' else str
 
-        if str[0] == '"':
-            str = str[1:]
-            str = str[:-1]
-
+        try:
+            if str[0] == '"':
+                str = str[1:]
+                str = str[:-1]
+        except Exception as e:
+            pass
 
         return str
 
