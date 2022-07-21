@@ -3,16 +3,16 @@ admin_user: neo4j
 admin_pass: cuneyt123
 
 mod: async
-thread_count: 256
+thread_count: 8
 
 files:
   - url: /home/cuneyttyler/knowledgebase/dbpedia/ontology--DEV_type=parsed.nt
     compression: none
     type: ttl
-    chunk_size: 100
+    chunk_size: 10
     cql: |
       WITH $dict.rows AS rows UNWIND rows as row
         MERGE(e:Entity {dbpedia_uri: row.subject, name: replace(replace(row.subject,'http://dbpedia.org/ontology/',''),'_',' ')})
-        WITH * where row.predicate == 'http://www.w3.org/2000/01/rdf-schema#subClassOf' or row.predicate == 'http://www.w3.org/2000/01/rdf-schema#domain'
+        WITH * where row.predicate = 'http://www.w3.org/2000/01/rdf-schema#subClassOf' or row.predicate = 'http://www.w3.org/2000/01/rdf-schema#domain'
           MERGE(e2:Entity {dbpedia_uri: row.object, name: replace(replace(row.subject,'http://dbpedia.org/ontology/',''),'_',' ')})
           WITH * CALL apoc.create.relationship(e,row.predicate,{source:'dbpedia'},e2) YIELD rel RETURN rel
