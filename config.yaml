@@ -3,11 +3,15 @@ admin_user: neo4j
 admin_pass: cuneyt123
 
 mod: async
-thread_count: 8
+thread_count: 256
 
 files:
-  - url: PATH_TO_FILE
-    compression: zip
-    type: json
+  - url: /home/cuneyttyler/knowledgebase/dbpedia/instance-types_lang=en_specific.ttl
+    compression: none
+    type: ttl
     chunk_size: 100
     cql: |
+      WITH $dict.rows AS rows UNWIND rows as row
+        MERGE(e:Entity {dbpedia_uri: row.subject})
+        MERGE(e2:Entity {dbpedia_uri: row.object})
+        WITH * CALL apoc.create.relationship(e,row.predicate,{source:'dbpedia'},e2) YIELD rel RETURN rel
