@@ -1,12 +1,12 @@
-server_uri: neo4j://localhost:7687
+server_uri: bolt://151.106.35.64:7687
 admin_user: neo4j
-admin_pass: cuneyt123
+admin_pass: l5IKrx07DGYdclK
 
 mod: async
-thread_count: 2
+thread_count: 64
 
 files:
-  - url: /home/cnytync/Dev/dbpedia/infobox-properties_lang=en.ttl.bz2
+  - url: /home/cuneyttyler/knowledgebase/dbpedia/infobox-properties_lang=en.ttl.bz2
     type: ttl
     compression: bz2
     chunk_size: 100
