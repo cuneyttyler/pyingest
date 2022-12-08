@@ -1,18 +1,18 @@
-server_uri: bolt://151.106.35.64:7687
+server_uri: neo4j://localhost:7687
 admin_user: neo4j
-admin_pass: l5IKrx07DGYdclK
+admin_pass: cuneyt123
 
 mod: async
-thread_count: 4
+thread_count: 256
 
 files:
   - url: /home/cuneyttyler/knowledgebase/dbpedia/infobox-properties_lang=en.ttl.bz2
     type: ttl
     compression: bz2
-    chunk_size: 10000
-    skip_chunks: 0
+    chunk_size: 100
+    skip_chunks: 570625
     cql: |
-         WITH $dict.rows AS rows UNWIND rows as row
+        WITH $dict.rows AS rows UNWIND rows as row
            MATCH(subject:Entity) where subject.dbpedia_uri = row.subject
            WITH *, 'number' as numberStr, 'time' as timeStr, 'string' as stringStr, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' as typeUriStr, 'Type' as typeNameStr
               CALL apoc.do.when(row.object CONTAINS 'http://dbpedia.org',
@@ -36,7 +36,3 @@ files:
 
                     WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "literal"}, object.object) YIELD rel RETURN null',
                     {row: row, subject: subject, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr, typeUriStr:typeUriStr, typeNameStr: typeNameStr}) YIELD value RETURN null
-
-
-
-
