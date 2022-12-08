@@ -22,7 +22,7 @@ files:
                    {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"},
                    object,
                    {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"}) YIELD rel RETURN null
-               WITH *,  row.object as object_ WHERE 'http://dbpedia.org' NOT IN object_
+               WITH *,  row.object as object_ WHERE NOT 'http://dbpedia.org' IN object_
                    MATCH(mp:MetaProperty) where mp.uri = row.predicate
                     WITH *,  row.type as 
                      WHERE type_ is not null and type_ = "http://www.w3.org/2001/XMLSchema#integer"
