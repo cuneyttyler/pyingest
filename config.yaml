@@ -12,29 +12,45 @@ files:
     chunk_size: 10000
     skip_chunks: 0
     cql: |
-        WITH $dict.rows AS rows UNWIND rows as row
-           MATCH(subject:Entity) where subject.dbpedia_uri = row.subject
-           WITH *, 'number' as numberStr, 'time' as timeStr, 'string' as stringStr, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' as typeUriStr, 'Ty>
-              CALL apoc.do.when("http://dbpedia.org/" IN row.object ,
-                  'MATCH(object:Entity) where object.dbpedia_uri = row.object
-                   WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,/'http://dbpedia.org/prop>
-                   'MATCH(mp:MetaProperty) where mp.uri = row.predicate
-                    WITH * CALL apoc.do.case([
-                         row.type is not null and \'http://www.w3.org/2001/XMLSchema#integer\' IN row.type ,
-                        /'CREATE(object:Property {value: row.object, datatype: numberStr})
-                         WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object/',
-                         row.type is not null and /'http://www.w3.org/2001/XMLSchema#date/' IN row.type,
-                         /'CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
-                          WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel  RETURN object/',
-                         /'http://xmlns.com/foaf/0.1/depiction/' IN row.predicate,
-                         /'SET subject.image = row.object/',
-                         /'http://xmlns.com/foaf/0.1/isPrimaryTopicOf/' IN row.predicate,
-                         /'SET subject.wikipedia_url = row.object/'],
-                         /'CREATE(object:Property {value: row.object, type: stringStr, datatype: stringStr})
-                          WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object/',
-                         {row:row, mp: mp, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr, typeUriStr:typeUriStr, typeNameStr: typeNameStr>
+        WITH $dict.rows as rows UNWIND rows as row
+      MATCH(subject:Entity {wikidata_id: row.id})
+      WITH * WHERE subject is not null
+      MERGE(subject:Entity {wikidata_id: row.id})
+      SET  subject.short_description = row.descriptions["en"].value
+      WITH keys(row.claims) as keys, row, subject
+        UNWIND keys as key
+         UNWIND row.claims[key] as claim
+          CALL apoc.do.when(claim.mainsnak.datavalue.type = 'wikibase-entityid' AND claim.mainsnak.datavalue.value.id IS NOT NULL, '
+              MERGE(object:Entity {wikidata_id: claim.mainsnak.datavalue.value.id})
+              WITH subject, key, claim, object
+                  CALL apoc.create.relationship(subject, "https://www.wikidata.org/wiki/Property:" + key, {source:"wikidata", type:"uri"}, object) YIELD rel
+                  RETURN null', '
+              WITH subject, key, claim
+                  MERGE(mp:MetaProperty {uri: "https://www.wikidata.org/wiki/Property:" + key, source: "wikidata"})
+                  WITH * CALL apoc.do.case([claim.mainsnak.datavalue.type IS NOT NULL AND claim.mainsnak.datavalue.type="string",
+"CREATE(object:Property {wikidata_id: key,datatype: claim.mainsnak.datatype, value: claim.mainsnak.datavalue.value, type: claim.mainsnak.datavalue.type,rank: claim.mainsnak.rank}) RETURN object",
+                                 claim.mainsnak.datavalue.type IS NOT NULL AND claim.mainsnak.datavalue.type="globecoordinate",
+"CREATE(object:Property {wikidata_id: key, datatype: claim.mainsnak.datatype, latitude: claim.mainsnak.datavalue.value.latitude, 
+longitude: claim.mainsnak.datavalue.value.longitude, altitude: claim.mainsnak.datavalue.value.altitude, precision: claim.mainsnak.datavalue.value.precision, 
+globe: claim.mainsnak.datavalue.value.globe, type: claim.mainsnak.datavalue.type,rank: claim.mainsnak.rank}) RETURN object",
+                                 claim.mainsnak.datavalue.type IS NOT NULL AND claim.mainsnak.datavalue.type="quantity"
+,"CREATE(object:Property {wikidata_id: key, datatype: claim.mainsnak.datatype, amount: claim.mainsnak.datavalue.value.amount, 
+ upperBound: claim.mainsnak.datavalue.value.upperBound, lowerBound: claim.mainsnak.datavalue.value.lowerBound, 
+ unit: claim.mainsnak.datavalue.value.unit, type: claim.mainsnak.datavalue.type,rank: claim.mainsnak.rank}) RETURN object",
+                                 claim.mainsnak.datavalue.type IS NOT NULL AND claim.mainsnak.datavalue.type="time"
+,"CREATE(object:Property {wikidata_id: key, datatype: claim.mainsnak.datatype, time: claim.mainsnak.datavalue.value.time, 
+ timezone: claim.mainsnak.datavalue.value.timezone, before: claim.mainsnak.datavalue.value.before, after: claim.mainsnak.datavalue.value.after, 
+ precision: claim.mainsnak.datavalue.value.precision, calendarmodel: claim.mainsnak.datavalue.value.calendarmodel, 
+ type: claim.mainsnak.datavalue.type,rank: claim.mainsnak.rank}) RETURN object"],"RETURN null",{claim:claim,subject:subject,key:key}) YIELD value as object
 
-                    WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,/'http://dbpedia.org/pro>
-                    {row: row, subject: subject, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr, typeUriStr:typeUriStr, typeNameStr: typeN>
+
+
+                  WITH subject, key, object.object as object WHERE object IS NOT NULL
+                      CREATE (object)-[:property_meta_property]->(mp)
+                      WITH * CALL apoc.create.relationship(subject, "https://www.wikidata.org/wiki/Property:" + key, {source:"wikidata", type:"literal"}, object) YIELD rel
+                      RETURN null
+                  ', {claim:claim,subject:subject,key:key}) YIELD value
+          RETURN null
+
 
 
