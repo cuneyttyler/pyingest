@@ -1,0 +1,17 @@
+server_uri: neo4j://localhost:7687
+admin_user: neo4j
+admin_pass: cuneyt123
+
+mod: async
+thread_count: 256
+
+files:
+  - url: /home/cuneyttyler/knowledgebase/dbpedia/labels_lang=en.ttl.bz2
+    type: ttl
+    compression: bz2
+    chunk_size: 100
+    skip_chunks: 0
+    cql: |
+        WITH $dict.rows AS rows UNWIND rows as row
+           MERGE(subject:Entity {dbpedia_uri: row.subject})
+           SET subject.name=row.object
