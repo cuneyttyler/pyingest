@@ -48,5 +48,5 @@ files:
                     {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "literal"}, 
                     {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "literal"},
                     object.object,
-                    {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "literal"}) YIELD rel RETURN null',
+                    {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "literal"}) YIELD rel RETURN null
                     {row: row, subject: subject, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr, typeUriStr:typeUriStr, typeNameStr: typeNameStr}) YIELD value RETURN null
