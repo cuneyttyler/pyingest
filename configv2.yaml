@@ -21,7 +21,7 @@ files:
                    {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"}, 
                    {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"},
                    object,
-                   {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"}) YIELD rel RETURN null',
+                   {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"}) YIELD rel RETURN object',
                    'MATCH(mp:MetaProperty) where mp.uri = row.predicate
                     WITH * CALL apoc.do.case([
                          row.type is not null and row.type = "http://www.w3.org/2001/XMLSchema#integer",
