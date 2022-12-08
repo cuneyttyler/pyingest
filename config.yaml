@@ -15,26 +15,26 @@ files:
         WITH $dict.rows AS rows UNWIND rows as row
            MATCH(subject:Entity) where subject.dbpedia_uri = row.subject
            WITH *, 'number' as numberStr, 'time' as timeStr, 'string' as stringStr, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' as typeUriStr, 'Ty>
-              CALL apoc.do.when("http://dbpedia.org" IN row.object ,
+              CALL apoc.do.when("http://dbpedia.org/" IN row.object ,
                   'MATCH(object:Entity) where object.dbpedia_uri = row.object
-                   WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/prop>
+                   WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,/'http://dbpedia.org/prop>
                    'MATCH(mp:MetaProperty) where mp.uri = row.predicate
                     WITH * CALL apoc.do.case([
                          row.type is not null and \'http://www.w3.org/2001/XMLSchema#integer\' IN row.type ,
-                        "CREATE(object:Property {value: row.object, datatype: numberStr})
-                         WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object",
-                         row.type is not null and "http://www.w3.org/2001/XMLSchema#date" IN row.type,
-                         "CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
-                          WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel  RETURN object",
-                         "http://xmlns.com/foaf/0.1/depiction" IN row.predicate,
-                         "SET subject.image = row.object",
-                         "http://xmlns.com/foaf/0.1/isPrimaryTopicOf" IN row.predicate,
-                         "SET subject.wikipedia_url = row.object"],
-                         "CREATE(object:Property {value: row.object, type: stringStr, datatype: stringStr})
-                          WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object",
+                        /'CREATE(object:Property {value: row.object, datatype: numberStr})
+                         WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object/',
+                         row.type is not null and /'http://www.w3.org/2001/XMLSchema#date/' IN row.type,
+                         /'CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
+                          WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel  RETURN object/',
+                         /'http://xmlns.com/foaf/0.1/depiction/' IN row.predicate,
+                         /'SET subject.image = row.object/',
+                         /'http://xmlns.com/foaf/0.1/isPrimaryTopicOf/' IN row.predicate,
+                         /'SET subject.wikipedia_url = row.object/'],
+                         /'CREATE(object:Property {value: row.object, type: stringStr, datatype: stringStr})
+                          WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object/',
                          {row:row, mp: mp, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr, typeUriStr:typeUriStr, typeNameStr: typeNameStr>
 
-                    WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/pro>
+                    WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,/'http://dbpedia.org/pro>
                     {row: row, subject: subject, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr, typeUriStr:typeUriStr, typeNameStr: typeN>
 
 
