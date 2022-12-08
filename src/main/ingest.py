@@ -370,7 +370,7 @@ class LocalServer(object):
     # However it decreases performance greatly and it seems to be loading the data nevertheless
     # So I set the retry count to 1 so it actually does not take into considerations deadlocks
     async def run_cql_wrapper(self, session_index, cql, dict):
-        max_try_count, i, retry = 1, 0, True
+        max_try_count, i, retry = 10, 0, True
         while retry and i < max_try_count:
             try:
                 await self.run_cql(session_index, cql, dict)
@@ -378,6 +378,7 @@ class LocalServer(object):
             except Exception as e:
                 if hasattr(e,'code') and e.code == 'Neo.TransientError.Transaction.DeadlockDetected':
                     print('Deadlock detected! Session: %s' % session_index)
+                    i += 1
                 else:
                     print('Exception occured (Session : %d)' % (session_index))
                     stderr_logger.exception(e)
