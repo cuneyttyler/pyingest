@@ -34,7 +34,7 @@ files:
                           WITH * CALL apoc.merge.relationship(object, typeUriStr ,{name: typeNameStr},{name: typeNameStr},mp,{name: typeNameStr}) YIELD rel  RETURN object
                      WITH *,   row.predicate as predicate_ 
                      WHERE predicate_  = "http://xmlns.com/foaf/0.1/depiction"
-                         SET subject.image = row.object,
+                         SET subject.image = row.object
                      WITH *,   row.predicate  as predicate_
                      WHERE predicate_ = "http://xmlns.com/foaf/0.1/isPrimaryTopicOf"
                          SET subject.wikipedia_url = row.object
