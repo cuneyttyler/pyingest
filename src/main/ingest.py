@@ -377,14 +377,11 @@ class LocalServer(object):
                     stderr_logger.exception(e)
                     i += 1
 
+    
     async def run_cql(self, session_index, cql, dict):
         print('Running session %d' % session_index)
-        driver = async_db.driver(config['server_uri'],
-                                 auth=(config['admin_user'],
-                                       config['admin_pass']))
-        self._async_drivers.append(driver)
 
-        session = driver.session(**self.db_config)
+        session = self._async_driver.session(**self.db_config)
 
         # session.run() throws an Exception, having trouble communicating with neo4j on the 2nd run
         # couldn't figure out why, this solution works well
@@ -393,7 +390,6 @@ class LocalServer(object):
         await tx.commit()
 
         await session.close()
-        await driver.close()
 
         print('Completed session %d' % session_index)
 
