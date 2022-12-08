@@ -20,15 +20,15 @@ files:
                    WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/prop>
                    'MATCH(mp:MetaProperty) where mp.uri = row.predicate
                     WITH * CALL apoc.do.case([
-                         row.type is not null and row.type = "http://www.w3.org/2001/XMLSchema#integer",
+                         row.type is not null and "http://www.w3.org/2001/XMLSchema#integer" IN row.type ,
                         "CREATE(object:Property {value: row.object, datatype: numberStr})
                          WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object",
-                         row.type is not null and row.type = "http://www.w3.org/2001/XMLSchema#date",
+                         row.type is not null and "http://www.w3.org/2001/XMLSchema#date" IN row.type,
                          "CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
                           WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel  RETURN object",
-                         row.predicate = "http://xmlns.com/foaf/0.1/depiction",
+                         "http://xmlns.com/foaf/0.1/depiction" IN row.predicate,
                          "SET subject.image = row.object",
-                         row.predicate = "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
+                         "http://xmlns.com/foaf/0.1/isPrimaryTopicOf" IN row.predicate,
                          "SET subject.wikipedia_url = row.object"],
                          "CREATE(object:Property {value: row.object, type: stringStr, datatype: stringStr})
                           WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object",
