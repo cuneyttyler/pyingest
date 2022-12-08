@@ -84,7 +84,9 @@ class LocalServer(object):
                                       auth=(config['admin_user'],
                                             config['admin_pass']))
 
-        self._async_drivers = []
+        self._async_driver = aync_db.driver(config['server_uri'],
+                                      auth=(config['admin_user'],
+                                            config['admin_pass']))
         # for i in range(int(config['thread_count'])):
             # self._async_drivers.append(async_db.driver(config['server_uri'],
             #                               auth=(config['admin_user'],
@@ -254,13 +256,13 @@ class LocalServer(object):
                 rows_dict = {'rows': rows}
                 self._driver.session(**self.db_config).run(params['cql'], dict=rows_dict).consume()
 
-            for driver in self._async_drivers:
-                driver.session(**self.db_config).close()
+            # for driver in self._async_drivers:
+            #     driver.session(**self.db_config).close()
 
             print("{} : Completed file", datetime.datetime.utcnow())
         except Exception as e:
             print("Error! " + str(e))
-            self.close_async_drivers()
+            # self.close_async_drivers()
 
 
 
@@ -343,14 +345,12 @@ class LocalServer(object):
                 rows_dict = {'rows': rows}
                 self._driver.session(**self.db_config).run(params['cql'], dict=rows_dict).consume()
 
-            for driver in self._async_drivers:
-                driver.session(**self.db_config).close()
 
             print("{} : Completed file", datetime.datetime.utcnow())
         except Exception as e:
             print("Error! " + str(e))
             stderr_logger.exception(e)
-            self.close_async_drivers()
+            # self.close_async_drivers()
 
     async def run_asyncio(self, process_params):
         tasks = []
