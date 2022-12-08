@@ -355,7 +355,6 @@ class LocalServer(object):
     async def run_asyncio(self, process_params):
         tasks = []
         for p in process_params:
-            print('SESSION %d' % p['session_index'])
             tasks.append(asyncio.create_task(self.run_cql_wrapper(p['session_index'], p['cql'], p['rows_dict'])))
 
         await asyncio.gather(*tasks)
