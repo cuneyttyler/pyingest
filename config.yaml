@@ -15,7 +15,7 @@ files:
         WITH $dict.rows AS rows UNWIND rows as row
            MATCH(subject:Entity) where subject.dbpedia_uri = row.subject
            WITH *, 'number' as numberStr, 'time' as timeStr, 'string' as stringStr, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' as typeUriStr, 'Ty>
-              CALL apoc.do.when(row.object CONTAINS 'http://dbpedia.org',
+              CALL apoc.do.when("http://dbpedia.org" IN row.object ,
                   'MATCH(object:Entity) where object.dbpedia_uri = row.object
                    WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/prop>
                    'MATCH(mp:MetaProperty) where mp.uri = row.predicate
