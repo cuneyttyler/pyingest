@@ -20,7 +20,7 @@ files:
                    WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/prop>
                    'MATCH(mp:MetaProperty) where mp.uri = row.predicate
                     WITH * CALL apoc.do.case([
-                         row.type is not null and "http://www.w3.org/2001/XMLSchema#integer" IN row.type ,
+                         row.type is not null and \'http://www.w3.org/2001/XMLSchema#integer\' IN row.type ,
                         "CREATE(object:Property {value: row.object, datatype: numberStr})
                          WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object",
                          row.type is not null and "http://www.w3.org/2001/XMLSchema#date" IN row.type,
