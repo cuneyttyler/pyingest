@@ -1,14 +1,14 @@
-server_uri: bolt://localhost:7687
+server_uri: bolt://151.106.35.64:7687
 admin_user: neo4j
-admin_pass: cuneyt123
+admin_pass: l5IKrx07DGYdclK
 mod: async
-thread_count: 2
+thread_count: 64
 
 files:
   - url: /home/cuneyttyler/dbpedia/sameAs_lang=en.ttl.bz2
     compression: bz2
     type: ttl
-    chunk_size: 10000
+    chunk_size:  500
     cql: |
       WITH $dict.rows AS rows UNWIND rows as row
         MERGE(e:Entity {dbpedia_uri: row.subject})
