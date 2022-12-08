@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/media/cnytync/Yeni Birim/Dev/pyingest-fork/pyingest/src/main/ingest.py", line 16, in <module>
+    import boto3
+ModuleNotFoundError: No module named 'boto3'
