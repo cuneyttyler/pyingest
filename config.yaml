@@ -5,7 +5,7 @@ mod: async
 thread_count: 2
 
 files:
-  - url: /home/cnytync/Dev/dbpedia/sameAs_lang=en.ttl.bz2
+  - url: /home/cuneyttyler/dbpedia/sameAs_lang=en.ttl.bz2
     compression: bz2
     type: ttl
     chunk_size: 10000
