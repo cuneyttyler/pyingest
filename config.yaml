@@ -15,30 +15,36 @@ files:
         WITH $dict.rows AS rows UNWIND rows as row
            MATCH(subject:Entity) where subject.dbpedia_uri = row.subject
            WITH *, 'number' as numberStr, 'time' as timeStr, 'string' as stringStr, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' as typeUriStr, 'Type' as typeNameStr
-              CALL apoc.do.when(row.object CONTAINS 'http://dbpedia.org',
-                  'MATCH(object:Entity) where object.dbpedia_uri = row.object
+              WITH *, object_ as row.object  WHERE 'http://dbpedia.org' IN object_ 
+                  MATCH(object:Entity) where object.dbpedia_uri = row.object
                    WITH * CALL apoc.merge.relationship(subject,row.predicate,
                    {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"}, 
                    {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"},
                    object,
-                   {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"}) YIELD rel RETURN null',
-                   'MATCH(mp:MetaProperty) where mp.uri = row.predicate
-                    WITH * CALL apoc.do.case([
-                         row.type is not null and row.type = "http://www.w3.org/2001/XMLSchema#integer",
-                        "CREATE(object:Property {value: row.object, datatype: numberStr})
-                         WITH * CALL apoc.merge.relationship(object, typeUriStr ,{name: typeNameStr},{name: typeNameStr},mp,{name: typeNameStr}) YIELD rel RETURN object",
-                         row.type is not null and row.type = "http://www.w3.org/2001/XMLSchema#date",
-                         "CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
-                          WITH * CALL apoc.merge.relationship(object, typeUriStr ,{name: typeNameStr},{name: typeNameStr},mp,{name: typeNameStr}) YIELD rel  RETURN object",
-                         row.predicate = "http://xmlns.com/foaf/0.1/depiction",
-                         "SET subject.image = row.object",
-                         row.predicate = "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
-                         "SET subject.wikipedia_url = row.object"],
-                         "CREATE(object:Property {value: row.object, type: stringStr, datatype: stringStr})
-                          WITH * CALL apoc.merge.relationship(object, typeUriStr ,{name: typeNameStr},{name: typeNameStr},mp,{name: typeNameStr}) YIELD rel RETURN object",
-                         {row:row, mp: mp, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr, typeUriStr:typeUriStr, typeNameStr: typeNameStr}) YIELD value as object
+                   {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"}) YIELD rel RETURN null
+               WITH *, object_ as row.object  WHERE 'http://dbpedia.org' NOT IN object_
+                   MATCH(mp:MetaProperty) where mp.uri = row.predicate
+                    WITH *, type_ as row.type 
+                     WHERE type_ is not null and type_ = "http://www.w3.org/2001/XMLSchema#integer"
+                        CREATE(object:Property {value: row.object, datatype: numberStr})
+                         WITH * CALL apoc.merge.relationship(object, typeUriStr ,{name: typeNameStr},{name: typeNameStr},mp,{name: typeNameStr}) YIELD rel RETURN object
+                     WITH *, type_ as row.type 
+                     WHERE type_ is not null and type_ = "http://www.w3.org/2001/XMLSchema#date"
+                         CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
+                          WITH * CALL apoc.merge.relationship(object, typeUriStr ,{name: typeNameStr},{name: typeNameStr},mp,{name: typeNameStr}) YIELD rel  RETURN object
+                     WITH *, predicate_ as row.predicate 
+                     WHERE predicate_  = "http://xmlns.com/foaf/0.1/depiction"
+                         SET subject.image = row.object,
+                     WITH *, predicate_ as row.predicate 
+                     WHERE predicate_ = "http://xmlns.com/foaf/0.1/isPrimaryTopicOf"
+                         SET subject.wikipedia_url = row.object
+                     WITH *, type_ as row.type, predicate_ as row.predicate  
+                     WHERE (type_ is null or (type_ != "http://www.w3.org/2001/XMLSchema#integer" and type_ != "http://www.w3.org/2001/XMLSchema#date"))
+                     and (predicate_  != "http://xmlns.com/foaf/0.1/depiction" and predicate_ = "http://xmlns.com/foaf/0.1/isPrimaryTopicOf")
+                         CREATE(object:Property {value: row.object, type: stringStr, datatype: stringStr})
+                          WITH * CALL apoc.merge.relationship(object, typeUriStr ,{name: typeNameStr},{name: typeNameStr},mp,{name: typeNameStr}) YIELD rel RETURN object
 
-                    WITH * CALL apoc.merge.relationship(subject,row.predicate,
+                  WITH * CALL apoc.merge.relationship(subject,row.predicate,
                     {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "literal"}, 
                     {name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "literal"},
                     object.object,
