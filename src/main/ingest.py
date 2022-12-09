@@ -370,7 +370,7 @@ class LocalServer(object):
     # However it decreases performance greatly and it seems to be loading the data nevertheless
     # So I set the retry count to 1 so it actually does not take into considerations deadlocks
     async def run_cql_wrapper(self, session_index, cql, dict):
-        max_try_count, i, retry = 1, 0, True
+        max_try_count, i, retry = 10, 0, True
         while retry and i < max_try_count:
             try:
                 await self.run_cql(session_index, cql, dict)
@@ -378,6 +378,7 @@ class LocalServer(object):
             except Exception as e:
                 if hasattr(e,'code') and e.code == 'Neo.TransientError.Transaction.DeadlockDetected':
                     print('Deadlock detected! Session: %s' % session_index)
+                    i += 1
                 else:
                     print('Exception occured (Session : %d)' % (session_index))
                     stderr_logger.exception(e)
@@ -387,15 +388,8 @@ class LocalServer(object):
     async def run_cql(self, session_index, cql, dict):
         print('Running session %d' % session_index)
 
-        session = self._async_driver.session(**self.db_config)
-
-        # session.run() throws an Exception, having trouble communicating with neo4j on the 2nd run
-        # couldn't figure out why, this solution works well
-        tx = await session.begin_transaction()
-        await tx.run(cql, dict=dict)
-        await tx.commit()
-
-        await session.close()
+        async with self._async_driver.session(**self.db_config) as session:
+            await session.run(cql, dict=dict)
 
         print('Completed session %d' % session_index)
 
