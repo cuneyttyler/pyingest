@@ -1,0 +1,6 @@
+rm: cannot remove 'logfile.log': No such file or directory
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/../../config.yaml", line 1
+    server_uri: bolt://151.106.35.64:7687
+                    ^
+SyntaxError: invalid syntax
+rm: cannot remove 'logfile.log': No such file or directory
