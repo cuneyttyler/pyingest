@@ -21,7 +21,7 @@ files:
                   and predicate_ != "http://xmlns.com/foaf/0.1/isPrimaryTopicOf"
                     CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
                           WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel
-                        WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "literal"}, object.object) YIELD rel as rel2 RETURN null
+                        WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "literal"}, object) YIELD rel as rel2 RETURN null
 
 
 
