@@ -3,7 +3,7 @@ from functools import wraps
 try:
     from neo4j._async.driver import AsyncGraphDatabase as async_db
 except ModuleNotFoundError:
-    print('Error! You should be running neo4j python driver version 5 to use async features')
+    print('Error! You should be running neo4j python driver version 5 to use async features ')
 
 from neo4j import GraphDatabase as sync_db
 import pandas as pd
