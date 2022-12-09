@@ -325,11 +325,26 @@ class LocalServer(object):
                 if len(rows) == 0:
                     halt = True
                 else:
+                    subjects = []
+                    for r in rows:
+                        s = [s for s in subjects if s == r['subject']]
+
+                        if len(s) == 0:
+                            subjects.append(r['subject'])
+
+                    rows_to_process = []
+                    for s in subjects:
+                        sameas_wikidata = [r for r in rows if 'http://www.wikidata.org/entity/' in r['object'] and r['subject'] == s]
+
+                        if len(sameas_wikidata) == 1:
+                            rows_to_process.append({'subject': s, 'predicate': sameas_wikidata[0]['predicate'], 'object': sameas_wikidata[0]['object']})
+
+
                     rec_num = rec_num + len(rows)
                     chunk_num = chunk_num + 1
                     if params['skip_chunks'] < chunk_num and params['skip_records'] < rec_num:
                         session_index = (chunk_num - 1) % config['thread_count']
-                        rows_dict = {'rows': rows}
+                        rows_dict = {'rows': rows_to_process}
 
                         print(file['url'], 'chunk: ' + str(chunk_num), 'session: ' + str(session_index),
                               datetime.datetime.utcnow(), flush=True)
