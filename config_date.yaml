@@ -16,6 +16,7 @@ files:
            MATCH(subject:Entity) where subject.dbpedia_uri = row.subject
            WITH *, 'number' as numberStr, 'time' as timeStr, 'string' as stringStr, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' as typeUriStr, 'Type' as typeNameStr
               WITH *, row.object as object_ WHERE NOT object_ CONTAINS 'http://dbpedia.org'
+                  MATCH(mp:MetaProperty) where mp.uri = row.predicate
                   WITH *, row.type as type_ WHERE type_ is not null and type_ = "http://www.w3.org/2001/XMLSchema#date"
                     CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
                           WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel

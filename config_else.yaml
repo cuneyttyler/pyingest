@@ -16,6 +16,7 @@ files:
            MATCH(subject:Entity) where subject.dbpedia_uri = row.subject
            WITH *, 'number' as numberStr, 'time' as timeStr, 'string' as stringStr, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' as typeUriStr, 'Type' as typeNameStr
               WITH *, row.object as object_ WHERE NOT object_ CONTAINS 'http://dbpedia.org'
+                  MATCH(mp:MetaProperty) where mp.uri = row.predicate
                   WITH *, row.type as type_, row.predicate as predicate_ WHERE (type_ is null or (type_ != "http://www.w3.org/2001/XMLSchema#date" and type_ != "http://www.w3.org/2001/XMLSchema#integer"))
                   and predicate_ != "http://xmlns.com/foaf/0.1/isPrimaryTopicOf"
                     CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
