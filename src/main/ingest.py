@@ -385,7 +385,7 @@ class LocalServer(object):
                     i += 1
 
 
-    async def run_cql(self, session_index, cql, dict):
+    async def run_cql(self, session_index, cql, dict): 
         print('Running session %d' % session_index)
 
         session = self._async_driver.session(**self.db_config)
