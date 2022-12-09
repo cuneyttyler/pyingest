@@ -84,7 +84,7 @@ class LocalServer(object):
                                       auth=(config['admin_user'],
                                             config['admin_pass']))
 
-        self._async_driver = aync_db.driver(config['server_uri'],
+        self._async_driver = async_db.driver(config['server_uri'],
                                       auth=(config['admin_user'],
                                             config['admin_pass']))
         # for i in range(int(config['thread_count'])):

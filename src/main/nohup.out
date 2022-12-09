@@ -1,0 +1,185 @@
+2022-12-09 07:33:56,967:ERROR:Traceback (most recent call last):
+2022-12-09 07:33:56,967:ERROR:  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 516, in <module>
+2022-12-09 07:33:56,968:ERROR:    main()
+2022-12-09 07:33:56,968:ERROR:  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 506, in main
+2022-12-09 07:33:56,968:ERROR:    server = LocalServer()
+2022-12-09 07:33:56,968:ERROR:  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 87, in __init__
+2022-12-09 07:33:56,968:ERROR:    self._async_driver = aync_db.driver(config['server_uri'],
+2022-12-09 07:33:56,968:ERROR:NameError: name 'aync_db' is not defined. Did you mean: 'async_db'?
+2022-12-09 07:34:24,067:ERROR:/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py:87: ExperimentalWarning: neo4j async is in experimental phase. It might be removed or changed at any time (including patch releases).
+2022-12-09 07:34:24,067:ERROR:  self._async_driver = async_db.driver(config['server_uri'],
+2022-12-09 07:34:24,068:INFO:{} : Reading file 2022-12-09 07:34:24.068064
+2022-12-09 07:34:24,068:INFO:Unsupported compression format: {} bz2
+2022-12-09 07:34:24,068:INFO:File {} /home/cuneyttyler/knowledgebase/dbpedia/infobox-properties_lang=en.ttl.bz2
+2022-12-09 07:34:24,290:INFO:/home/cuneyttyler/knowledgebase/dbpedia/infobox-properties_lang=en.ttl.bz2 chunk: 1 session: 0 2022-12-09 07:34:24.290844
+2022-12-09 07:34:24,422:INFO:/home/cuneyttyler/knowledgebase/dbpedia/infobox-properties_lang=en.ttl.bz2 chunk: 2 session: 1 2022-12-09 07:34:24.422221
+2022-12-09 07:34:24,563:INFO:/home/cuneyttyler/knowledgebase/dbpedia/infobox-properties_lang=en.ttl.bz2 chunk: 3 session: 2 2022-12-09 07:34:24.563642
+2022-12-09 07:34:24,698:INFO:/home/cuneyttyler/knowledgebase/dbpedia/infobox-properties_lang=en.ttl.bz2 chunk: 4 session: 3 2022-12-09 07:34:24.698763
+2022-12-09 07:34:24,699:INFO:Running session 0
+2022-12-09 07:34:24,706:INFO:Running session 1
+2022-12-09 07:34:24,706:INFO:Running session 2
+2022-12-09 07:34:24,706:INFO:Running session 3
+2022-12-09 07:34:26,005:ERROR:/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py:225: RuntimeWarning: coroutine 'AsyncBolt4x0.reset' was never awaited
+2022-12-09 07:34:26,005:ERROR:  self.connection.reset()
+2022-12-09 07:34:26,005:ERROR:RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2022-12-09 07:34:26,005:INFO:Exception occured (Session : 3)
+2022-12-09 07:34:26,005:ERROR:{code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214603] can't wait on resource RWLock[NODE(7296942), hash=389668921] since => LockClient[214603] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697] <-[:WAITING_FOR]- LockClient[214600] <-[:HELD_BY]- RWLock[NODE(7296942), hash=389668921]}
+Traceback (most recent call last):
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 369, in run_cql_wrapper
+    await self.run_cql(session_index, cql, dict)
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 390, in run_cql
+    await tx.commit()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 153, in commit
+    await self._consume_results()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 81, in _consume_results
+    await result.consume()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 295, in consume
+    async for _ in self:
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 188, in __aiter__
+    await self._connection.fetch_message()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 177, in inner
+    await coroutine_func(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_bolt4.py", line 306, in fetch_message
+    await response.on_failure(summary_metadata or {})
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 232, in on_failure
+    raise Neo4jError.hydrate(**metadata)
+neo4j.exceptions.ClientError: {code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214603] can't wait on resource RWLock[NODE(7296942), hash=389668921] since => LockClient[214603] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697] <-[:WAITING_FOR]- LockClient[214600] <-[:HELD_BY]- RWLock[NODE(7296942), hash=389668921]}
+2022-12-09 07:34:26,042:INFO:Running session 3
+2022-12-09 07:34:27,163:INFO:Exception occured (Session : 1)
+2022-12-09 07:34:27,179:ERROR:{code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214600] can't wait on resource RWLock[NODE(7293450), hash=2105318023] since => LockClient[214600] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697] <-[:WAITING_FOR]- LockClient[214598] <-[:HELD_BY]- RWLock[NODE(7293450), hash=2105318023]}
+Traceback (most recent call last):
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 369, in run_cql_wrapper
+    await self.run_cql(session_index, cql, dict)
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 390, in run_cql
+    await tx.commit()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 153, in commit
+    await self._consume_results()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 81, in _consume_results
+    await result.consume()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 295, in consume
+    async for _ in self:
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 188, in __aiter__
+    await self._connection.fetch_message()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 177, in inner
+    await coroutine_func(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_bolt4.py", line 306, in fetch_message
+    await response.on_failure(summary_metadata or {})
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 232, in on_failure
+    raise Neo4jError.hydrate(**metadata)
+neo4j.exceptions.ClientError: {code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214600] can't wait on resource RWLock[NODE(7293450), hash=2105318023] since => LockClient[214600] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697] <-[:WAITING_FOR]- LockClient[214598] <-[:HELD_BY]- RWLock[NODE(7293450), hash=2105318023]}
+2022-12-09 07:34:27,179:INFO:Running session 1
+2022-12-09 07:34:28,022:INFO:Exception occured (Session : 0)
+2022-12-09 07:34:28,022:ERROR:{code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214598] can't wait on resource RWLock[NODE(7296942), hash=385819134] since => LockClient[214598] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697] <-[:WAITING_FOR]- LockClient[214609] <-[:HELD_BY]- RWLock[NODE(7296942), hash=385819134]}
+Traceback (most recent call last):
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 369, in run_cql_wrapper
+    await self.run_cql(session_index, cql, dict)
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 390, in run_cql
+    await tx.commit()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 153, in commit
+    await self._consume_results()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 81, in _consume_results
+    await result.consume()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 295, in consume
+    async for _ in self:
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 188, in __aiter__
+    await self._connection.fetch_message()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 177, in inner
+    await coroutine_func(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_bolt4.py", line 306, in fetch_message
+    await response.on_failure(summary_metadata or {})
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 232, in on_failure
+    raise Neo4jError.hydrate(**metadata)
+neo4j.exceptions.ClientError: {code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214598] can't wait on resource RWLock[NODE(7296942), hash=385819134] since => LockClient[214598] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697] <-[:WAITING_FOR]- LockClient[214609] <-[:HELD_BY]- RWLock[NODE(7296942), hash=385819134]}
+2022-12-09 07:34:28,023:INFO:Running session 0
+2022-12-09 07:34:28,514:INFO:Exception occured (Session : 3)
+2022-12-09 07:34:28,514:ERROR:{code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214604] can't wait on resource RWLock[NODE(7296942), hash=385819134] since => LockClient[214604] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697] <-[:WAITING_FOR]- LockClient[214609] <-[:HELD_BY]- RWLock[NODE(7296942), hash=385819134]}
+Traceback (most recent call last):
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 369, in run_cql_wrapper
+    await self.run_cql(session_index, cql, dict)
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 390, in run_cql
+    await tx.commit()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 153, in commit
+    await self._consume_results()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 81, in _consume_results
+    await result.consume()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 295, in consume
+    async for _ in self:
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 188, in __aiter__
+    await self._connection.fetch_message()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 177, in inner
+    await coroutine_func(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_bolt4.py", line 306, in fetch_message
+    await response.on_failure(summary_metadata or {})
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 232, in on_failure
+    raise Neo4jError.hydrate(**metadata)
+neo4j.exceptions.ClientError: {code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214604] can't wait on resource RWLock[NODE(7296942), hash=385819134] since => LockClient[214604] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697] <-[:WAITING_FOR]- LockClient[214609] <-[:HELD_BY]- RWLock[NODE(7296942), hash=385819134]}
+2022-12-09 07:34:28,514:INFO:Running session 3
+2022-12-09 07:34:37,014:INFO:Exception occured (Session : 1)
+2022-12-09 07:34:37,014:ERROR:{code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214609] can't wait on resource RWLock[NODE(7290154), hash=1203166314] since => LockClient[214609] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697] <-[:WAITING_FOR]- LockClient[214613] <-[:HELD_BY]- RWLock[NODE(7290154), hash=1203166314]}
+Traceback (most recent call last):
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 369, in run_cql_wrapper
+    await self.run_cql(session_index, cql, dict)
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 390, in run_cql
+    await tx.commit()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 153, in commit
+    await self._consume_results()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 81, in _consume_results
+    await result.consume()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 295, in consume
+    async for _ in self:
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 188, in __aiter__
+    await self._connection.fetch_message()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 177, in inner
+    await coroutine_func(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_bolt4.py", line 306, in fetch_message
+    await response.on_failure(summary_metadata or {})
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 232, in on_failure
+    raise Neo4jError.hydrate(**metadata)
+neo4j.exceptions.ClientError: {code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214609] can't wait on resource RWLock[NODE(7290154), hash=1203166314] since => LockClient[214609] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697] <-[:WAITING_FOR]- LockClient[214613] <-[:HELD_BY]- RWLock[NODE(7290154), hash=1203166314]}
+2022-12-09 07:34:37,014:INFO:Running session 1
+2022-12-09 07:34:37,818:INFO:Exception occured (Session : 1)
+2022-12-09 07:34:37,818:ERROR:{code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214614] can't wait on resource RWLock[NODE(7316688), hash=1390259697] since => LockClient[214614] <-[:HELD_BY]- RWLock[NODE(7296942), hash=486301631] <-[:WAITING_FOR]- LockClient[214613] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697]}
+Traceback (most recent call last):
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 369, in run_cql_wrapper
+    await self.run_cql(session_index, cql, dict)
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 390, in run_cql
+    await tx.commit()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 153, in commit
+    await self._consume_results()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 81, in _consume_results
+    await result.consume()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 295, in consume
+    async for _ in self:
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 188, in __aiter__
+    await self._connection.fetch_message()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 177, in inner
+    await coroutine_func(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_bolt4.py", line 306, in fetch_message
+    await response.on_failure(summary_metadata or {})
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 232, in on_failure
+    raise Neo4jError.hydrate(**metadata)
+neo4j.exceptions.ClientError: {code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214614] can't wait on resource RWLock[NODE(7316688), hash=1390259697] since => LockClient[214614] <-[:HELD_BY]- RWLock[NODE(7296942), hash=486301631] <-[:WAITING_FOR]- LockClient[214613] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697]}
+2022-12-09 07:34:37,818:INFO:Running session 1
+2022-12-09 07:34:43,903:INFO:Exception occured (Session : 2)
+2022-12-09 07:34:43,903:ERROR:{code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214602] can't wait on resource RWLock[NODE(7316688), hash=1390259697] since => LockClient[214602] <-[:HELD_BY]- RWLock[NODE(7293450), hash=8465449] <-[:WAITING_FOR]- LockClient[214613] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697]}
+Traceback (most recent call last):
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 369, in run_cql_wrapper
+    await self.run_cql(session_index, cql, dict)
+  File "/home/cuneyttyler/knowledgebase/pyingest/src/main/ingest.py", line 390, in run_cql
+    await tx.commit()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 153, in commit
+    await self._consume_results()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/transaction.py", line 81, in _consume_results
+    await result.consume()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 295, in consume
+    async for _ in self:
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/work/result.py", line 188, in __aiter__
+    await self._connection.fetch_message()
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 177, in inner
+    await coroutine_func(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_bolt4.py", line 306, in fetch_message
+    await response.on_failure(summary_metadata or {})
+  File "/usr/local/lib/python3.10/dist-packages/neo4j/_async/io/_common.py", line 232, in on_failure
+    raise Neo4jError.hydrate(**metadata)
+neo4j.exceptions.ClientError: {code: Neo.ClientError.Procedure.ProcedureCallFailed} {message: Failed to invoke procedure `apoc.do.when`: Caused by: org.neo4j.kernel.DeadlockDetectedException: LockClient[214602] can't wait on resource RWLock[NODE(7316688), hash=1390259697] since => LockClient[214602] <-[:HELD_BY]- RWLock[NODE(7293450), hash=8465449] <-[:WAITING_FOR]- LockClient[214613] <-[:HELD_BY]- RWLock[NODE(7316688), hash=1390259697]}
+2022-12-09 07:34:43,904:INFO:Running session 2
