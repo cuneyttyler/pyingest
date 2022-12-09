@@ -1,6 +1,6 @@
-server_uri: bolt://localhost:7687
+server_uri: bolt://151.106.35.64:7687
 admin_user: neo4j
-admin_pass: cuneyt123
+admin_pass: l5IKrx07DGYdclK
 
 mod: async
 thread_count: 64
@@ -8,7 +8,7 @@ thread_count: 64
 files:
   - url: /home/cuneyttyler/knowledgebase/wikidata/latest-all.json.bz2
     compression: bz2
-    type: ttl
+    type: json
     chunk_size: 100
     cql: |
       WITH $dict.rows as rows UNWIND rows as row
