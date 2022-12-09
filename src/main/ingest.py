@@ -317,8 +317,8 @@ class LocalServer(object):
             while not halt:
                 rows = parser.read_data(openfile, prefixes, params['chunk_size'])
                 for r in rows:
-                    # if 'http://dbpedia.org' not in r['object']:
-                    print(r['object'])
+                    if 'http://dbpedia.org' not in r['object']:
+                        print(r['object'])
                 if len(rows) == 0:
                     halt = True
                 else:
