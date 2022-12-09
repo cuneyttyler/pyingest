@@ -388,15 +388,8 @@ class LocalServer(object):
     async def run_cql(self, session_index, cql, dict): 
         print('Running session %d' % session_index)
 
-        session = self._async_driver.session(**self.db_config)
-
-        # session.run() throws an Exception, having trouble communicating with neo4j on the 2nd run
-        # couldn't figure out why, this solution works well
-        tx = await session.begin_transaction()
-        await tx.run(cql, dict=dict)
-        await tx.commit()
-
-        await session.close()
+        async with self._async_driver.session(**self.db_config) as session:
+            await session.run(cql, dict=dict)
 
         print('Completed session %d' % session_index)
 
