@@ -9,7 +9,7 @@ files:
   - url: /home/cuneyttyler/knowledgebase/wikidata/latest-all.json.bz2
     compression: bz2
     type: json
-    chunk_size: 100
+    chunk_size: 10
     cql: |
       WITH $dict.rows as rows UNWIND rows as row
         MERGE(subject:Entity {wikidata_id: row.id})
