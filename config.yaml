@@ -3,7 +3,7 @@ admin_user: neo4j
 admin_pass: l5IKrx07DGYdclK
 
 mod: async
-thread_count: 64
+thread_count: 4
 
 files:
   - url: /home/cuneyttyler/knowledgebase/dbpedia/instance-types_lang=en_specific.ttl.bz2
