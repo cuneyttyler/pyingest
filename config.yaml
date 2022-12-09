@@ -3,10 +3,10 @@ admin_user: neo4j
 admin_pass: cuneyt123
 
 mod: async
-thread_count: 256
+thread_count: 64
 
 files:
-  - url: /home/cnytync/Dev/dbpedia/categories_lang=en_articles.ttl.bz2
+  - url: /home/cuneyttyler/knowledgebase/wikidata/latest-all.json.bz2
     compression: bz2
     type: ttl
     chunk_size: 100
