@@ -3,13 +3,14 @@ admin_user: neo4j
 admin_pass: l5IKrx07DGYdclK
 
 mod: async
-thread_count: 64
+thread_count: 8
 
 files:
   - url: /home/cuneyttyler/knowledgebase/wikidata/latest-all.json.bz2
     compression: bz2
     type: json
     chunk_size: 1
+    skip_chunks: 17677753
     cql: |
       WITH $dict.rows as rows UNWIND rows as row
         MERGE(subject:Entity {wikidata_id: row.id})
@@ -32,7 +33,7 @@ files:
                     
                     
                     WITH subject, key, object.object as object WHERE object IS NOT NULL
-                        CREATE (object)-[:property_meta_property]->(mp)
+                        CREATE (object)-[:PROPERTY_META_PROPERTY]->(mp)
                         WITH * CALL apoc.create.relationship(subject, "https://www.wikidata.org/wiki/Property:" + key, {source:"wikidata", type:"literal"}, object) YIELD rel
                         RETURN null
                     ', {claim:claim,subject:subject,key:key}) YIELD value
