@@ -6,8 +6,8 @@ mod: async
 thread_count: 8
 
 files:
-  - url: /home/cuneyttyler/knowledgebase/wikidata/latest-all.json.bz2
-    compression: bz2
+  - url: /home/cuneyttyler/knowledgebase/wikidata/latest-all.json.gz
+    compression: gzip
     type: json
     chunk_size: 1
     skip_records: 17677753
