@@ -10,7 +10,7 @@ files:
     compression: bz2
     type: json
     chunk_size: 1
-    skip_chunks: 17677753
+    skip_records: 17677753
     cql: |
       WITH $dict.rows as rows UNWIND rows as row
         MERGE(subject:Entity {wikidata_id: row.id})
