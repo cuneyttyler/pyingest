@@ -245,13 +245,13 @@ class LocalServer(object):
                                     tasks.append(asyncio.create_task(
                                         self.run_cql_wrapper(p['session_index'], p['cql'], p['rows_dict'])))
 
-                                await asyncio.gather(*tasks)
+                                # await asyncio.gather(*tasks)
 
                                 process_params = []
 
                             rows = []
-                    elif rec_num % 1000 == 0:
-                        print('Skipping record %d ' % (rec_num))
+                    elif chunk_num % 10 == 0:
+                        print('Skipping chunk %d ' % (rec_num))
 
             if len(rows) > 0:
                 print(file['url'], chunk_num, datetime.datetime.utcnow(), flush=True)
