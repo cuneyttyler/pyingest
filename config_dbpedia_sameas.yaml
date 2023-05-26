@@ -5,11 +5,11 @@ mod: async
 thread_count: 2
 
 files:
-  - url: /home/cnytync/Dev/dbpedia/sameAs_lang=en.ttl.bz2
+  - url: /media/drived/Dev/dbpedia/sameAs_lang=en.ttl.bz2
     compression: bz2
     type: ttl
     chunk_size: 10000
-    skip_records: 9100
+    skip_records: 0
     cql: |
       WITH $dict.rows AS rows UNWIND rows as row
         MERGE(e:Entity {dbpedia_uri: row.subject})
