@@ -1,12 +1,12 @@
-server_uri: bolt://151.106.35.64:7687
+server_uri: bolt://localhost:7687
 admin_user: neo4j
-admin_pass: l5IKrx07DGYdclK
+admin_pass: cuneyt123
 
 mod: async
-thread_count: 64
+thread_count: 8
 
 files:
-  - url: /home/cuneyttyler/knowledgebase/dbpedia/ontology--DEV_type=parsed.nt
+  - url: /media/drived/dbpedia/ontology--DEV_type=parsed.nt
     compression: none
     type: ttl
     chunk_size: 100
@@ -14,5 +14,5 @@ files:
       WITH $dict.rows AS rows UNWIND rows as row
         MERGE(e:Entity {dbpedia_uri: row.subject, name: replace(replace(row.subject,'http://dbpedia.org/ontology/',''),'_',' ')})
         WITH * where row.predicate = 'http://www.w3.org/2000/01/rdf-schema#subClassOf' or row.predicate = 'http://www.w3.org/2000/01/rdf-schema#domain'
-          MERGE(e2:Entity {dbpedia_uri: row.object, name: replace(replace(row.subject,'http://dbpedia.org/ontology/',''),'_',' ')})
-          WITH * CALL apoc.create.relationship(e,row.predicate,{source:'dbpedia'},e2) YIELD rel RETURN rel
+          MERGE(e2:Entity {dbpedia_uri: row.object, name: replace(replace(row.object,'http://dbpedia.org/ontology/',''),'_',' ')})
+          WITH * CREATE(e)-[rel:SUBCLASS_OF {uri:row.predicate, source: 'dbpedia'}]->(e2)

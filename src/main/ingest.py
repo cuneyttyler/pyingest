@@ -389,7 +389,7 @@ class LocalServer(object):
         print('Running session %d' % session_index)
 
         async with self._async_driver.session(**self.db_config) as session:
-            session.run(cql, dict=dict)
+            await session.run(cql, dict=dict)
 
         print('Completed session %d' % session_index)
 
