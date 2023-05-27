@@ -3,7 +3,7 @@ from functools import wraps
 try:
     from neo4j._async.driver import AsyncGraphDatabase as async_db
 except ModuleNotFoundError:
-    print('Error! You should be running neo4j python driver version 5 to use async features')
+    print('Error! You should be running neo4j python driver version 5 to use async features ')
 
 from neo4j import GraphDatabase as sync_db
 import pandas as pd
@@ -389,7 +389,7 @@ class LocalServer(object):
         print('Running session %d' % session_index)
 
         async with self._async_driver.session(**self.db_config) as session:
-            session.run(cql, dict=dict)
+            await session.run(cql, dict=dict)
 
         print('Completed session %d' % session_index)
 

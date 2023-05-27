@@ -9,6 +9,8 @@ files:
   - url: /media/drived/dbpedia/long-abstracts_lang=en.ttl.bz2
     compression: bz2
     type: ttl
-    chunk_size: 500
+    chunk_size: 100
     cql: |
-        CREATE(t:Test)
+      WITH $dict.rows as rows UNWIND rows as row
+        MERGE(subject:Entity {dbpedia_uri: row.subject})
+        SET subject.description=row.object
