@@ -1,12 +1,12 @@
-server_uri: bolt://151.106.35.64:7687
+server_uri: bolt://localhost:7687
 admin_user: neo4j
-admin_pass: l5IKrx07DGYdclK
+admin_pass: cuneyt123
 
 mod: async
-thread_count: 4
+thread_count: 8
 
 files:
-  - url: /home/cuneyttyler/knowledgebase/dbpedia/instance-types_lang=en_specific.ttl.bz2
+  - url: /media/drived/dbpedia/instance-types_lang=en_specific.ttl.bz2
     compression: bz2
     type: ttl
     chunk_size: 100
@@ -14,4 +14,4 @@ files:
       WITH $dict.rows AS rows UNWIND rows as row
         MERGE(e:Entity {dbpedia_uri: row.subject})
         MERGE(e2:Entity {dbpedia_uri: row.object})
-        WITH * CALL apoc.create.relationship(e,row.predicate,{source:'dbpedia'},e2) YIELD rel RETURN rel
+        CREATE(e)-[rel:INSTANCE_OF {source:'dbpedia', uri: row.predicate}]->(e2)
