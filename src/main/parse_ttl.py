@@ -158,9 +158,10 @@ class TTLParser():
         str = str[:-1] if str[len(str) - 1] == '>' else str
 
         try:
-            if str[0] == '"':
-                str = str[1:]
-                str = str[:-1]
+            if str[0] == '"' and str[1] == '"':
+                str = str[1:-1]
+            elif str[0] == '"':
+                str = str[1:-4]
         except Exception as e:
             pass
 

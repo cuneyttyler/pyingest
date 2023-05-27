@@ -1,14 +1,14 @@
-server_uri: bolt://151.106.35.64:7687
+server_uri: bolt://localhost:7687
 admin_user: neo4j
-admin_pass: l5IKrx07DGYdclK
+admin_pass: cuneyt123
 
 mod: async
-thread_count: 64
+thread_count: 8
 pre_ingest:
   - MERGE(property:MetaProperty {uri:'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property', name:'Property'})
 
 files:
-  - url: /home/cuneyttyler/knowledgebase/dbpedia/infobox-property-definitions_lang=en.ttl.bz2
+  - url: /media/drived/dbpedia/infobox-property-definitions_lang=en.ttl.bz2
     type: ttl
     compression: bz2
     chunk_size: 100
@@ -18,8 +18,6 @@ files:
       WITH property, $dict.rows AS rows UNWIND rows as row
         WITH row, property, row.predicate as predicate where predicate = 'http://www.w3.org/2000/01/rdf-schema#label'
         CREATE(metaProperty:MetaProperty {uri: row.subject, name: apoc.text.capitalize(row.object), source: 'dbpedia'})
-        WITH *
-        CALL apoc.create.relationship(metaProperty, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' ,{name:'Type'},property) YIELD rel
-        RETURN null
+        WITH * CREATE(metaProperty)-[rel:TYPE_OF {uri:'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}]->(property)
 
 
