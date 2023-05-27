@@ -9,8 +9,8 @@ class TTLParser():
         return re.split(TEMP_PLACEHOLDER, re.sub(seperator, lambda match: TEMP_PLACEHOLDER + match.group() , s),maxsplit=maxsplit)
 
     def parse_ttl_line(self, line, new_rec, prev_subject,prefixes):
-        if len(line.strip()) == 0:
-            return None
+        if len(line.strip()) == 0 or line[0] == '#':
+            return None, True, None
 
         try:
             cols = self.split_and_keep(r' (".*"|\.|<http|<ftp)',line.strip(),maxsplit=3)
@@ -37,7 +37,8 @@ class TTLParser():
             row = {}
             if new_rec:
                 if len(cols) != 4 and len(cols) != 5:
-                    raise self.InvalidTTLDocument("Error! Invalid TTL Document!")
+                    return None, True, None
+                    # raise self.InvalidTTLDocument("Error! Invalid TTL Document!")
 
                 subjectPrefix = [prefix for prefix in prefixes if prefix['alias'] in cols[0]]
                 if len(subjectPrefix) == 1:

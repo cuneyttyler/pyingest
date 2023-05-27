@@ -11,4 +11,6 @@ files:
     type: ttl
     chunk_size: 500
     cql: |
-        CREATE(t:Test)
+      WITH $dict.rows as rows UNWIND rows as row
+        MERGE(subject:Entity {dbpedia_uri: row.subject})
+        SET subject.description=row.object
