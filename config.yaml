@@ -1,42 +1,28 @@
-server_uri: bolt://151.106.35.64:7687
+server_uri: bolt://localhost:7687
 admin_user: neo4j
-admin_pass: l5IKrx07DGYdclK
+admin_pass: cuneyt123
 
 mod: async
-thread_count: 4
+thread_count: 8
 
 files:
-  - url: /home/cuneyttyler/knowledgebase/dbpedia/infobox-properties_lang=en.ttl.bz2
+  - url: /media/drived/dbpedia/infobox-properties_lang=en.ttl.bz2
     type: ttl
     compression: bz2
-    chunk_size: 10000
-    skip_chunks: 0
+    chunk_size: 100
+    skip_chunks: 450728
     cql: |
          WITH $dict.rows AS rows UNWIND rows as row
-           MATCH(subject:Entity) where subject.dbpedia_uri = row.subject
-           WITH *, 'number' as numberStr, 'time' as timeStr, 'string' as stringStr, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' as typeUriStr, 'Type' as typeNameStr
-              CALL apoc.do.when(row.object CONTAINS 'http://dbpedia.org',
-                  'MATCH(object:Entity) where object.dbpedia_uri = row.object
-                   WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"}, object) YIELD rel RETURN null',
-                   'MATCH(mp:MetaProperty) where mp.uri = row.predicate
-                    WITH * CALL apoc.do.case([
-                         row.type is not null and row.type = "http://www.w3.org/2001/XMLSchema#integer",
-                        "CREATE(object:Property {value: row.object, datatype: numberStr})
-                         WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object",
-                         row.type is not null and row.type = "http://www.w3.org/2001/XMLSchema#date",
-                         "CREATE(object:Property {value: row.object, type: timeStr, datatype: timeStr})
-                          WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel  RETURN object",
-                         row.predicate = "http://xmlns.com/foaf/0.1/depiction",
-                         "SET subject.image = row.object",
-                         row.predicate = "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
-                         "SET subject.wikipedia_url = row.object"],
-                         "CREATE(object:Property {value: row.object, type: stringStr, datatype: stringStr})
-                          WITH * CALL apoc.create.relationship(object, typeUriStr ,{name: typeNameStr},mp) YIELD rel RETURN object",
-                         {row:row, mp: mp, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr, typeUriStr:typeUriStr, typeNameStr: typeNameStr}) YIELD value as object
-
-                    WITH * CALL apoc.create.relationship(subject,row.predicate,{name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "literal"}, object.object) YIELD rel RETURN null',
-                    {row: row, subject: subject, numberStr: numberStr, timeStr: timeStr, stringStr: stringStr, typeUriStr:typeUriStr, typeNameStr: typeNameStr}) YIELD value RETURN null
-
-
-
-
+           MERGE(subject:Entity {dbpedia_uri:row.subject})
+          WITH * CALL {
+            WITH * WITH row, subject WHERE row.object CONTAINS 'http://dbpedia.org'
+              MERGE(object:Entity {dbpedia_uri: row.object})
+              WITH * CREATE(subject)-[rel:TO_ENTITY {uri: row.predicate, name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"}]->(object) RETURN null as ret
+            
+            UNION WITH * WITH row, subject WHERE NOT row.object CONTAINS 'http://dbpedia.org' AND row.predicate = "http://xmlns.com/foaf/0.1/depiction"
+              SET subject.image = row.object RETURN null as ret
+      
+            UNION WITH * WITH row, subject WHERE NOT row.object CONTAINS 'http://dbpedia.org' AND row.predicate <> "http://xmlns.com/foaf/0.1/depiction"
+              MERGE(subject)-[rel2:TO_PROPERTY]->(property:DbpediaProperty)
+              SET property = apoc.map.setKey(property, row.predicate, row.object) RETURN null as ret
+          } RETURN ret
