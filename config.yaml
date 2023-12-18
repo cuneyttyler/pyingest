@@ -1,16 +1,18 @@
 server_uri: bolt://localhost:7687
 admin_user: neo4j
-admin_pass: cuneyt123
+admin_pass: 94BuJ2\h7i1+
 
 mod: async
 thread_count: 8
 
 files:
-  - url: /media/drived/dbpedia/sameAs_lang=en.ttl.bz2
+  - url: D:/Dev/Dbpedia/sameAs_lang=en.ttl.bz2
     compression: bz2
     type: ttl
     chunk_size:  500
     cql: |
       WITH $dict.rows AS rows UNWIND rows as row
-        MERGE(e:Entity {dbpedia_uri: row.subject})
-        SET e.wikidata_id = replace(row.object,"http://www.wikidata.org/entity/",""), e.entity_type= 'semantic_web', e.cr_date= datetime()
+        MERGE(e:Entity {dbpedia_uri: row.subject, name: replace(replace(row.subject,'http://dbpedia.org/resource/',''),'_',' ')})
+        SET e.entity_type= 'semantic_web', e.cr_date= datetime()
+        WITH row, row.object as _object,e WHERE "wikidata" in _object
+          SET e.wikidata_id = replace(row.object,"http://www.wikidata.org/entity/","")
