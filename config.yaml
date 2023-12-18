@@ -1,12 +1,12 @@
 server_uri: bolt://localhost:7687
 admin_user: neo4j
-admin_pass: cuneyt123
+admin_pass: 94BuJ2\h7i1+
 
 mod: async
 thread_count: 8
 
 files:
-  - url: /media/drived/dbpedia/ontology--DEV_type=parsed.nt
+  - url: D:/Dev/Dbpedia/ontology--DEV_type=parsed.nt
     compression: none
     type: ttl
     chunk_size: 100
