@@ -1,6 +1,6 @@
 server_uri: bolt://localhost:7687
 admin_user: neo4j
-admin_pass: cuneyt123
+admin_pass: 94BuJ2\h7i1+
 
 mod: async
 thread_count: 8
@@ -8,7 +8,7 @@ pre_ingest:
   - MERGE(property:MetaProperty {uri:'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property', name:'Property'})
 
 files:
-  - url: /media/drived/dbpedia/infobox-property-definitions_lang=en.ttl.bz2
+  - url: D:/Dev/Dbpedia/infobox-property-definitions_lang=en.ttl.bz2
     type: ttl
     compression: bz2
     chunk_size: 100
