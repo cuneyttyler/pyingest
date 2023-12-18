@@ -1,12 +1,12 @@
 server_uri: bolt://localhost:7687
 admin_user: neo4j
-admin_pass: cuneyt123
+admin_pass: 94BuJ2\h7i1+
 
 mod: async
 thread_count: 8
 
 files:
-  - url: /media/drived/dbpedia/instance-types_lang=en_specific.ttl.bz2
+  - url: D:/Dev/Dbpedia/instance-types_lang=en_specific.ttl.bz2
     compression: bz2
     type: ttl
     chunk_size: 100
