@@ -474,9 +474,9 @@ def file_handle(url, compression):
     else:
         path = url
     if compression == 'gzip':
-        return gzip.open(path, 'rt')
+        return gzip.open(path, 'rt', encoding='utf-8')
     elif compression == 'bz2':
-        return bz2.open(path, 'rt')
+        return bz2.open(path, 'rt', encoding='utf-8')
     elif compression == 'zip':
         # Only support single file in ZIP archive for now
         if isinstance(path, str):
