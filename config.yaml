@@ -1,23 +1,23 @@
 server_uri: bolt://localhost:7687
 admin_user: neo4j
-admin_pass: cuneyt123
+admin_pass: 94BuJ2\h7i1+
 
 mod: async
 thread_count: 8
 
 files:
-  - url: /media/drived/dbpedia/infobox-properties_lang=en.ttl.bz2
+  - url: D:/Dev/Dbpedia/infobox-properties_lang=en.ttl.bz2
     type: ttl
     compression: bz2
     chunk_size: 100
-    skip_chunks: 450728
+    skip_chunks: 117584
     cql: |
          WITH $dict.rows AS rows UNWIND rows as row
            MERGE(subject:Entity {dbpedia_uri:row.subject})
           WITH * CALL {
             WITH * WITH row, subject WHERE row.object CONTAINS 'http://dbpedia.org'
               MERGE(object:Entity {dbpedia_uri: row.object})
-              WITH * CREATE(subject)-[rel:TO_ENTITY {uri: row.predicate, name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")),source: "dbpedia", type: "uri"}]->(object) RETURN null as ret
+              WITH * CREATE(subject)-[rel:TO_ENTITY {uri: row.predicate, name: apoc.text.capitalize(replace(row.predicate,"http://dbpedia.org/property/","")), source: "dbpedia", type: "uri"}]->(object) RETURN null as ret
             
             UNION WITH * WITH row, subject WHERE NOT row.object CONTAINS 'http://dbpedia.org' AND row.predicate = "http://xmlns.com/foaf/0.1/depiction"
               SET subject.image = row.object RETURN null as ret
